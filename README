@@ -4,11 +4,18 @@ Simplified Starling
 NOTE: This is work in progress, I'm currently extracting this from a project.
 
 You can put anything into Starling, but after using Starling on a couple of 
-projects I've seen I use always the same data structue.
+projects I've seen I use always the same hash for storing the jobs.
 
     job[:type]
     job[:task]
     job[:id]
+
+To Do List
+==========
+
+- Create YAML file with the configuration
+- Store pid file of queue
+- Test
 
 Example
 =======
