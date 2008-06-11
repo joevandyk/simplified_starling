@@ -1,5 +1,8 @@
 require 'starling'
 require 'simplified_starling'
+require 'model_extensions'
+
+ActiveRecord::Base.send(:include, ModelExtensions)
 
 ##
 # TODO: Read config from a yaml file
