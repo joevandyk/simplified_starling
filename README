@@ -6,9 +6,17 @@ NOTE: This is work in progress, I'm currently extracting this from a project.
 You can put anything into Starling, but after using Starling on a couple of 
 projects I've seen I use always the same hash for storing the jobs.
 
-    job[:type]
-    job[:task]
-    job[:id]
+    newsletter = Newsletter.find(params[:id])
+    newsletter.push('test_rendering')
+
+This will push into the queue the task `test_rendering` which belongs to a model.
+
+    STARLING.set('newsletters', { :type => 'Newsletter', :id => 1, :task => 'test_rendering' })
+
+You can overwrite the queue by adding the queue name
+
+    newsletter.push('test_rendering', 'my_queue')
+    => STARLING.set('my_queue', { :type => 'Newsletter', :id => 1, :task => 'test_rendering' })
 
 To Do List
 ==========
@@ -26,11 +34,7 @@ Example
     class Typus::NewslettersController < TypusController
     
       def test
-        job = {}
-        job[:type] = "Newsletter"
-        job[:id] = params[:id]
-        job[:task] = 'test_rendering'
-        STARLING.set('newsletter', job)
+        Newsletter.find(params[:id]).push('test_rendering')
       end
     
     end
