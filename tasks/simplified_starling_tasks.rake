@@ -1,4 +1,5 @@
 require 'starling'
+require "#{RAILS_ROOT}/vendor/plugins/simplified_starling/lib/simplified_starling"
 
 namespace :simplified do
 
@@ -41,8 +42,23 @@ namespace :simplified do
     end
 
     desc "Processor ..."
-    task :processor do
-      puts "=> Starts a processor that manages the queue."
+    task :start_processor => :environment do
+      if ENV['QUEUE']
+        Simplified::Starling.prepare(ENV['QUEUE'])
+      else
+        puts "=> Please, provide a queue name with ENV['QUEUE']"
+      end
+    end
+
+    desc "Stop Processor"
+    task :stop_processor => :environment do
+      if ENV['QUEUE']
+        pid = File.read(RAILS_ROOT + "/log/starling_#{ENV['QUEUE']}_queue.pid").chomp
+        system "kill #{pid}"
+        puts "Starling queue processor stopped."
+      else
+        puts "=> Please, provide a queue name with ENV['QUEUE']"
+      end
     end
 
     task :push do
