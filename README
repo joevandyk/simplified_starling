@@ -1,0 +1,44 @@
+Simplified Starling
+===================
+
+NOTE: This is work in progress, I'm currently extracting this from a project.
+
+You can put anything into Starling, but after using Starling on a couple of 
+projects I've seen I use always the same data structue.
+
+    job[:type]
+    job[:task]
+    job[:id]
+
+Example
+=======
+
+    ##
+    # app/controllers/typus/newsletters_controller.rb
+    #
+    class Typus::NewslettersController < TypusController
+    
+      def test
+        job = {}
+        job[:type] = "Newsletter"
+        job[:id] = params[:id]
+        job[:task] = 'test_rendering'
+        STARLING.set('newsletter', job)
+      end
+    
+    end
+
+    ##
+    # app/models/newsletter.rb
+    #
+    class Newsletter < ActiveRecord::Base
+    
+      ##
+      # Your task
+      #
+      def test_rendering
+      end
+    
+    end
+
+Copyright (c) 2008 Francesc Esplugas Marti, released under the MIT license
