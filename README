@@ -3,6 +3,11 @@ Simplified Starling
 
 NOTE: This is work in progress, I'm currently extracting this from a project.
 
+With starling installed in your machine you can start the daemon by running.
+
+    rake simplified:starling:start
+    rake simplified:starling:stop
+
 You can put anything into Starling, but after using Starling on a couple of 
 projects I've seen I use always the same hash for storing the jobs.
 
