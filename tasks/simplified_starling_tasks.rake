@@ -21,11 +21,11 @@ namespace :simplified do
       pid_file = config['starling']['pid_file']
       if File.exist?(pid_file)
         system "kill -9 `cat #{config['starling']['pid_file']}`"
-        system "rm #{pid_file}"
         Simplified::Starling.feedback("Server successfully stopped.")
       else
         Simplified::Starling.feedback("Server is not running.")
       end
+      system "rm #{pid_file}"
     end
 
     desc "Queue Status"
