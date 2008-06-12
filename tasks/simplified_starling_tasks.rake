@@ -6,19 +6,19 @@ namespace :simplified do
   namespace :starling do
 
     desc "Start Starling server"
-    task :start do
+    task :start => :environment do
       starling_binary = `which starling`.strip
-      options = "--queue_path /tmp "
-      options << "--pid /tmp/starling.pid"
-      command = "#{starling_binary} #{options} -d"
+      options = "--config #{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml"
+      command = "#{starling_binary} #{options}"
       raise RuntimeError, "Cannot find starling." if starling_binary.blank?
       system command
       puts "== STARLING SUCCESSFULLY STARTED ======================"
     end
 
     desc "Stop Starling server"
-    task :stop do
-      system "kill -9 `cat /tmp/starling.pid`"
+    task :stop => :environment do
+      config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
+      system "kill -9 `cat #{config['starling']['pid_file']}`"
       puts "== STARLING SUCCESSFULLY STOPPED ======================"
     end
 
