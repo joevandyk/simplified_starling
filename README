@@ -33,14 +33,6 @@ background process you can start poping those tasks from the queue.
     rake simplified:starling:start_processor QUEUE=newsletter
     rake simplified:starling:stop_processor QUEUE=newsletter
 
-To Do List
-==========
-
-- Create YAML file with the configuration
-- Store pid file of queue.
-- Test.
-- Make the rake tasks work.
-
 Example
 =======
 
