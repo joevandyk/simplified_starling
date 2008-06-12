@@ -89,6 +89,14 @@ namespace :simplified do
       starling.get("comment")
     end
 
+    task :test, :queues do |task, args|
+      if args[:queues].is_a? String
+        puts args[:queues].split.join(", ")
+      else
+        Simplified::Starling.feedback("Please, provide a queue name.")
+      end
+    end
+
   end
 
 end
