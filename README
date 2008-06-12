@@ -1,6 +1,8 @@
 Simplified Starling
 ===================
 
+Note: Works with Starling 0.9.6 or edge.
+
 With starling installed in your machine you can start the daemon by running.
 
     rake simplified:starling:start
