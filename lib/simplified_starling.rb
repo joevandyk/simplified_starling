@@ -18,16 +18,25 @@ module Simplified
         loop do
           job = STARLING.get(queue)
           begin
-            job[:type].constantize.find(job[:id]).send(job[:task])
-          rescue
-            puts "Error on #{job}"
+            job[:type].capitalize.constantize.find(job[:id]).send(job[:task])
+          rescue Exception => error
+            puts error
           end
         end
       end
       Process.detach(pid)
-      ##
-      # TODO: Store pid id in a file ...
-      puts "== STARTING STARLING PROCESSOR == #{pid} ===================="
+
+      pid_file = "log/starling_#{queue}_#{RAILS_ENV}.pid"
+      File.open(pid_file, "w") { |f| f.write(pid) }
+      File.chmod(0644, pid_file)
+
+      # puts "== STARTING STARLING PROCESSOR =============================="
+
+    end
+
+    def self.feedback(message)
+      puts "== [SIMPLFIED STARLING] ====================================="
+      puts "=> #{message}"
     end
 
   end
