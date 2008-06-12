@@ -28,8 +28,8 @@ You can overwrite the queue by adding the queue name
 Once your application is running you'll be pushing tasks to a queue. With a 
 background process you can start poping those tasks from the queue.
 
-    rake simplified:starling:start_processor QUEUE=newsletter
-    rake simplified:starling:stop_processor QUEUE=newsletter
+    rake simplified:starling:start_processor QUEUE=newsletters
+    rake simplified:starling:stop_processor QUEUE=newsletters
 
 To list the current queues.
 
