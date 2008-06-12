@@ -1,8 +1,6 @@
 Simplified Starling
 ===================
 
-NOTE: This is work in progress, I'm currently extracting this from a project.
-
 With starling installed in your machine you can start the daemon by running.
 
     rake simplified:starling:start
@@ -32,6 +30,10 @@ background process you can start poping those tasks from the queue.
 
     rake simplified:starling:start_processor QUEUE=newsletter
     rake simplified:starling:stop_processor QUEUE=newsletter
+
+To list the current queues.
+
+    rake simplified:starling:queues
 
 Example
 =======
