@@ -61,12 +61,18 @@ namespace :simplified do
       end
     end
 
+    ##
+    # This is used for testing purposes ...
+
     task :push do
       starling = Starling.new('127.0.0.1:22122')
       starling.set("newsletter", { :id => 1, :task => 'test' })
       starling.set("newsletter", { :id => 1, :task => 'deliver' })
       starling.set("comment", { :id => 1500, :task => 'check_if_spam' })
     end
+
+    ##
+    # And so is this ...
 
     task :pop do
       starling = Starling.new('127.0.0.1:22122')
