@@ -44,17 +44,17 @@ namespace :simplified do
       end
     end
 
-    desc "Processor ..."
+    desc "Start processing queues"
     task :start_processor => :environment do
       if ENV['QUEUE']
         Simplified::Starling.feedback("Queue processor started for #{ENV['QUEUE']}.")
         Simplified::Starling.prepare(ENV['QUEUE'])
       else
-        Simplified::Starling.feedback("Please, provide a queue name with ENV['QUEUE']")
+        Simplified::Starling.feedback("Please, provide a queue name with QUEUE=name")
       end
     end
 
-    desc "Stop Processor"
+    desc "Stop queue processor"
     task :stop_processor => :environment do
       if ENV['QUEUE']
         pid = `ps aux | grep 'simplified:starling:start_processor QUEUE=#{ENV['QUEUE']}' | grep -v grep | ruby -e 'puts STDIN.read.split[1]'`
