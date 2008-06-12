@@ -1,5 +1,4 @@
-Simplified Starling
-===================
+== Simplified Starling
 
 Works with Starling 0.9.6 or edge. You can follow these steps to build it.
 
@@ -42,8 +41,7 @@ To list the current queues.
 
     rake simplified:starling:queues
 
-Example
-=======
+== Example
 
     ##
     # app/controllers/typus/newsletters_controller.rb
@@ -69,8 +67,7 @@ Example
     
     end
 
-Acknowledgments
-===============
+== Acknowledgments
 
 - Blaine Cook, Twitter Inc. for this nice queue system.
 
