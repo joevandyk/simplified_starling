@@ -18,8 +18,14 @@ namespace :simplified do
     desc "Stop Starling server"
     task :stop => :environment do
       config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
-      system "kill -9 `cat #{config['starling']['pid_file']}`"
-      Simplified::Starling.feedback("Server successfully stopped.")
+      pid_file = config['starling']['pid_file']
+      if File.exist?(pid_file)
+        system "kill -9 `cat #{config['starling']['pid_file']}`"
+        system "rm #{pid_file}"
+        Simplified::Starling.feedback("Server successfully stopped.")
+      else
+        Simplified::Starling.feedback("Server is not running.")
+      end
     end
 
     desc "Queue Status"
