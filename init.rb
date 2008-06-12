@@ -4,10 +4,7 @@ require 'model_extensions'
 
 ActiveRecord::Base.send(:include, ModelExtensions)
 
-##
-# TODO: Read config from a yaml file
+config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
+host, port = config['starling']['host'], config['starling']['port']
 
-##
-# Raise an error if starling is not available
-
-STARLING = Starling.new('127.0.0.1:22122')
+STARLING = Starling.new("#{host}:#{port}")
