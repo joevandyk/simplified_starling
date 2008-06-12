@@ -47,11 +47,6 @@ namespace :simplified do
     desc "Processor ..."
     task :start_processor => :environment do
       if ENV['QUEUE']
-        pid_file = "#{RAILS_ROOT}/log/starling_#{ENV['QUEUE']}_#{RAILS_ENV}.pid"
-        if File.exist?(pid_file)
-          Simplified::Starling.feedback("#{ENV['QUEUE']} already running.")
-          exit
-        end
         Simplified::Starling.feedback("Queue processor started for #{ENV['QUEUE']}.")
         Simplified::Starling.prepare(ENV['QUEUE'])
       else
@@ -62,17 +57,15 @@ namespace :simplified do
     desc "Stop Processor"
     task :stop_processor => :environment do
       if ENV['QUEUE']
-        pid_file = "#{RAILS_ROOT}/log/starling_#{ENV['QUEUE']}_#{RAILS_ENV}.pid"
-        if File.exist?(pid_file)
-          pid = File.read(pid_file).chomp
+        pid = `ps aux | grep 'simplified:starling:start_processor QUEUE=#{ENV['QUEUE']}' | grep -v grep | ruby -e 'puts STDIN.read.split[1]'`
+        unless pid == "nil\n"
           system "kill #{pid}"
-          FileUtils.rm(pid_file)
           Simplified::Starling.feedback("Queue processor stopped.")
         else
-          Simplified::Starling.feedback("Pid file for #{ENV['QUEUE']} doesn't exist.")
+          Simplified::Starling.feedback("No running queue.")
         end
       else
-        Simplified::Starling.feedback("Please, provide a queue name with ENV['QUEUE']")
+        Simplified::Starling.feedback("Please, provide a queue name.")
       end
     end
 
@@ -81,9 +74,9 @@ namespace :simplified do
 
     task :push do
       starling = Starling.new('127.0.0.1:22122')
-      starling.set("newsletter", { :type => 'newsletter', :id => 1, :task => 'test' })
-      starling.set("newsletter", { :type => 'newsletter', :id => 1, :task => 'deliver' })
-      starling.set("comment", { :type => 'comment', :id => 1500, :task => 'check_if_spam' })
+      starling.set("newsletters", { :type => 'newsletter', :id => 1, :task => 'test' })
+      starling.set("newsletters", { :type => 'newsletter', :id => 1, :task => 'deliver' })
+      starling.set("comments", { :type => 'comment', :id => 1500, :task => 'check_if_spam' })
     end
 
     ##
@@ -91,8 +84,8 @@ namespace :simplified do
 
     task :pop do
       starling = Starling.new('127.0.0.1:22122')
-      starling.get("newsletter")
-      starling.get("comment")
+      starling.get("newsletters")
+      starling.get("comments")
     end
 
     task :test, :queues do |task, args|
