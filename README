@@ -1,7 +1,11 @@
 Simplified Starling
 ===================
 
-Note: Works with Starling 0.9.6 or edge.
+Works with Starling 0.9.6 or edge. You can follow these steps to build it.
+
+    sudo gem install newgem eventmachine rails_analyzer_tools memcache-client
+    git clone git://github.com/anotherbritt/starling.git
+    cd starling && rake gem && cd pkg && sudo gem install starling-0.9.6.gem
 
 With starling installed in your machine you can start the daemon by running.
 
@@ -16,9 +20,10 @@ projects I've seen I use always the same hash for storing the jobs.
 
 This will push into the queue the task `test_rendering` which belongs to a model.
 
-    STARLING.set('newsletters', { :type => 'Newsletter', 
-                                  :id => 1, 
-                                  :task => 'test_rendering' })
+    newsletter.push('test_rendering')
+    => STARLING.set('newsletters', { :type => 'Newsletter', 
+                                     :id => 1, 
+                                     :task => 'test_rendering' })
 
 You can overwrite the queue by adding the queue name
 
@@ -57,11 +62,16 @@ Example
     class Newsletter < ActiveRecord::Base
     
       ##
-      # Your task
+      # Your long-running task.
       #
       def test_rendering
       end
     
     end
+
+Acknowledgments
+===============
+
+- Blaine Cook, Twitter Inc. for this nice queue system.
 
 Copyright (c) 2008 Francesc Esplugas Marti, released under the MIT license
