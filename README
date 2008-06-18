@@ -31,6 +31,16 @@ You can overwrite the queue by adding the queue name
                                   :id => 1, 
                                   :task => 'test_rendering' })
 
+You can even push a class task into the queue.
+
+    Stock.push('recalculate')
+
+This will push into the queue the task +recalculate+ which belongs to a model.
+
+    Stock.push('recalculate')
+    => STARLING.set('stocks', { :type => 'Stock', 
+                                :task => 'recalculate' })
+
 Once your application is running you'll be pushing tasks to a queue. With a 
 background process you can start poping those tasks from the queue.
 
