@@ -15,7 +15,11 @@ module Simplified
       loop do
         job = STARLING.get(queue)
         begin
-          job[:type].capitalize.constantize.find(job[:id]).send(job[:task])
+          if job[:id]
+            job[:type].constantize.find(job[:id]).send(job[:task])
+          else
+            job[:type].constantize.send(job[:task])
+          end
         rescue Exception => error
           puts error
         end

@@ -1,9 +1,9 @@
-module Simplified
+module SimplifiedStarling
 
-  module ActiveRecord
+  class ActiveRecord::Base
 
     ##
-    # Push item into the queue
+    # Push record task into the queue
     #
     def push(task, queue = self.class.name.tableize)
       job = { :type => self.class.to_s, :id => self.id, :task => task }
@@ -14,4 +14,16 @@ module Simplified
 
 end
 
-ActiveRecord::Base.send(:include, Simplified::ActiveRecord)
+class Class
+
+  ##
+  # Push a class method task into the queue
+  #
+  def push(task, queue = self.name.tableize)
+    job = { :type => self.to_s, :task => task }
+    STARLING.set(queue, job)
+  end
+
+end
+
+ActiveRecord::Base.send(:include, SimplifiedStarling)
