@@ -17,7 +17,7 @@ projects I've seen I use always the same hash for storing the jobs.
     newsletter = Newsletter.find(params[:id])
     newsletter.push('test_rendering')
 
-This will push into the queue the task `test_rendering` which belongs to a model.
+This will push into the queue the task +test_rendering+ which belongs to a model.
 
     newsletter.push('test_rendering')
     => STARLING.set('newsletters', { :type => 'Newsletter', 
