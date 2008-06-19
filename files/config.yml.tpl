@@ -7,3 +7,4 @@ starling:
   syslog_channel: starling-tampopo
   log_level: DEBUG
   daemonize: true
+  queue: your_application_name
