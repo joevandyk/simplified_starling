@@ -4,9 +4,10 @@ module Simplified
 
     def self.prepare(queue)
       if STARLING.available_queues.include?(queue)
+        self.feedback("Queue processor started for `#{queue}`.")
         start_processing(queue)
       else
-        puts "== STARLING ERROR: Queue not available ==================="
+        self.feedback("Queue `#{queue}` is not available")
       end
     end
 
@@ -21,7 +22,7 @@ module Simplified
             job[:type].constantize.send(job[:task])
           end
         rescue Exception => error
-          puts error
+          self.feedback(error)
         end
       end
     end
