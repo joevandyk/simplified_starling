@@ -86,9 +86,9 @@ namespace :simplified do
       desc "Stop a queue."
       task :stop => :environment do
         if ENV['QUEUE']
-          pid = `ps aux | grep 'simplified:starling:start_processor QUEUE=#{ENV['QUEUE']}' | grep -v grep | ruby -e 'puts STDIN.read.split[1]'`
+          pid = `ps aux | grep 'simplified:starling:queues:start QUEUE=#{ENV['QUEUE']}' | grep -v grep | ruby -e 'puts STDIN.read.split[1]'`
           unless pid == "nil\n"
-            system "kill #{pid}"
+            system "kill -9 #{pid}"
             Simplified::Starling.feedback("Queue processor stopped for `#{ENV['QUEUE']}`.")
           else
             Simplified::Starling.feedback("Queue `#{ENV['QUEUE']}` is not running.")
