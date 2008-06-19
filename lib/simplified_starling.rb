@@ -27,6 +27,14 @@ module Simplified
       end
     end
 
+    def self.status
+      stats = STARLING.stats
+      self.feedback("Status")
+      pp stats
+    rescue Exception => error
+      self.feedback(error)
+    end
+
     def self.feedback(message)
       puts "== [SIMPLIFIED STARLING] ====================================="
       puts "=> #{message}"
