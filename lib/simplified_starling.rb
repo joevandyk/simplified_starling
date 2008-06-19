@@ -3,12 +3,8 @@ module Simplified
   class Starling
 
     def self.prepare(queue)
-      if STARLING.available_queues.include?(queue)
-        self.feedback("Queue processor started for `#{queue}`.")
-        start_processing(queue)
-      else
-        self.feedback("Queue `#{queue}` is not available")
-      end
+      self.feedback("Queue processor started for `#{queue}`.")
+      start_processing(queue)
     end
 
     def self.start_processing(queue)
