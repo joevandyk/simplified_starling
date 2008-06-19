@@ -5,7 +5,7 @@ namespace :simplified do
 
   namespace :starling do
 
-    desc "Start Starling server"
+    desc "Start starling server"
     task :start => :environment do
       starling_binary = `which starling`.strip
       options = "--config #{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml"
@@ -15,7 +15,7 @@ namespace :simplified do
       Simplified::Starling.feedback("Server successfully started.")
     end
 
-    desc "Stop Starling server"
+    desc "Stop starling server"
     task :stop => :environment do
       config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
       pid_file = config['starling']['pid_file']
@@ -28,7 +28,13 @@ namespace :simplified do
       system "rm #{pid_file}"
     end
 
-    desc "Queue Status"
+    desc "Restart starling server"
+    task :restart => :environment do
+      Rake::Task['simplified:starling:stop'].invoke
+      Rake::Task['simplified:starling:start'].invoke
+    end
+
+    desc "Queue status"
     task :queues => :environment do
       begin
         items = STARLING.sizeof(:all)
