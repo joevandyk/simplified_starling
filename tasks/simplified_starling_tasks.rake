@@ -39,9 +39,7 @@ namespace :simplified do
 
     desc "Server stats"
     task :stats => :environment do
-      config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
-      items = STARLING.sizeof(config['starling']['queue'])
-      Simplified::Starling.feedback("Queue #{config['starling']['queue']} has #{items} tasks.")
+      Simplified::Starling.stats
     end
 
   end
