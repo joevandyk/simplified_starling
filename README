@@ -59,6 +59,10 @@ background process you can start poping those tasks from the queue.
     $ rake simplified:starling:queues:start QUEUE=newsletters
     $ rake simplified:starling:queues:stop QUEUE=newsletters
 
+To view server stats ...
+
+    $ rake simplified:starling:stats
+
 == Example
 
     ##
