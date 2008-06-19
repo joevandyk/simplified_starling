@@ -34,6 +34,11 @@ namespace :simplified do
       Rake::Task['simplified:starling:start'].invoke
     end
 
+    desc "Server stats"
+    task :stats => :environment do
+      Simplified::Starling.stats
+    end
+
     desc "Queue status"
     task :queues => :environment do
       begin
@@ -69,7 +74,7 @@ namespace :simplified do
 
     namespace :queues do
 
-      desc "Start processing queues with QUEUE=your_queue"
+      desc "Start a queue."
       task :start => :environment do
         if ENV['QUEUE']
           Simplified::Starling.prepare(ENV['QUEUE'])
@@ -78,7 +83,7 @@ namespace :simplified do
         end
       end
 
-      desc "Stop queue processor with QUEUE=your_queue"
+      desc "Stop a queue."
       task :stop => :environment do
         if ENV['QUEUE']
           pid = `ps aux | grep 'simplified:starling:start_processor QUEUE=#{ENV['QUEUE']}' | grep -v grep | ruby -e 'puts STDIN.read.split[1]'`
@@ -88,6 +93,16 @@ namespace :simplified do
           else
             Simplified::Starling.feedback("Queue `#{ENV['QUEUE']}` is not running.")
           end
+        else
+          Simplified::Starling.feedback("Please, provide a queue name with QUEUE=name")
+        end
+      end
+
+      desc "Restart a queue."
+      task :restart => :environment do
+        if ENV['QUEUE']
+          Rake::Task['simplified:starling:queues:stop'].invoke
+          Rake::Task['simplified:starling:queues:start'].invoke
         else
           Simplified::Starling.feedback("Please, provide a queue name with QUEUE=name")
         end
