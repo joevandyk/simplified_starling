@@ -6,6 +6,34 @@ Works with Starling 0.9.6 or edge. You can follow these steps to build it.
     git clone git://github.com/anotherbritt/starling.git
     cd starling && rake gem && cd pkg && sudo gem install starling-0.9.6.gem
 
+=== Installing
+
+Install this Rails plugin as usual.
+
+    script/plugin install git://github.com/fesplugas/simplified_starling.git
+
+After installing the plugin you'll find configuration files for each Rails 
+environment under +config/starling+.
+
+    ##
+    # RAILS_ROOT/config/starling/development.yml
+    #
+    starling:
+      host: 127.0.0.1
+      port: 22122
+      pid_file: /tmp/starling.pid
+      queue_path: /tmp
+      timeout: 0
+      syslog_channel: starling-tampopo
+      log_level: DEBUG
+      daemonize: true
+      queue: app_development
+
+You'll also find a initializer called +starling.rb+ under +config/initializers+ 
+that will connect your application to the +starling+ server.
+
+=== How it works?
+
 With +starling+ installed in your machine you can start/stop/restart the daemon 
 by running.
 
@@ -40,30 +68,30 @@ To view server stats ...
 
     $ rake simplified:starling:stats
 
-== Example
+=== Example
 
     ##
     # app/controllers/typus/newsletters_controller.rb
     #
     class Typus::NewslettersController < TypusController
-    
+
       def test
         Newsletter.find(params[:id]).push('test_rendering')
       end
-    
+
     end
 
     ##
     # app/models/newsletter.rb
     #
     class Newsletter < ActiveRecord::Base
-    
+
       ##
       # Your long-running task.
       #
       def test_rendering
       end
-    
+
     end
 
 == Acknowledgments
