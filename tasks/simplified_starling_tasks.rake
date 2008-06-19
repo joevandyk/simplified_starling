@@ -50,56 +50,49 @@ namespace :simplified do
       end
     end
 
-    desc "Start processing queues"
-    task :start_processor => :environment do
-      if ENV['QUEUE']
-        Simplified::Starling.feedback("Queue processor started for #{ENV['QUEUE']}.")
-        Simplified::Starling.prepare(ENV['QUEUE'])
-      else
-        Simplified::Starling.feedback("Please, provide a queue name with QUEUE=name")
-      end
-    end
-
-    desc "Stop queue processor"
-    task :stop_processor => :environment do
-      if ENV['QUEUE']
-        pid = `ps aux | grep 'simplified:starling:start_processor QUEUE=#{ENV['QUEUE']}' | grep -v grep | ruby -e 'puts STDIN.read.split[1]'`
-        unless pid == "nil\n"
-          system "kill #{pid}"
-          Simplified::Starling.feedback("Queue processor stopped.")
-        else
-          Simplified::Starling.feedback("No running queue.")
-        end
-      else
-        Simplified::Starling.feedback("Please, provide a queue name.")
-      end
-    end
-
     ##
     # This is used for testing purposes ...
 
     task :push do
       starling = Starling.new('127.0.0.1:22122')
-      starling.set("newsletters", { :type => 'newsletter', :id => 1, :task => 'test' })
       starling.set("newsletters", { :type => 'newsletter', :id => 1, :task => 'deliver' })
       starling.set("comments", { :type => 'comment', :id => 1500, :task => 'check_if_spam' })
+      Simplified::Starling.feedback("Pushed a `newsletter` and a `comments` job.")
     end
-
-    ##
-    # And so is this ...
 
     task :pop do
       starling = Starling.new('127.0.0.1:22122')
       starling.get("newsletters")
       starling.get("comments")
+      Simplified::Starling.feedback("Popped a `newsletter` and a `comments` job.")
     end
 
-    task :test, :queues do |task, args|
-      if args[:queues].is_a? String
-        puts args[:queues].split.join(", ")
-      else
-        Simplified::Starling.feedback("Please, provide a queue name.")
+    namespace :queues do
+
+      desc "Start processing queues with QUEUE=your_queue"
+      task :start => :environment do
+        if ENV['QUEUE']
+          Simplified::Starling.prepare(ENV['QUEUE'])
+        else
+          Simplified::Starling.feedback("Please, provide a queue name with QUEUE=name")
+        end
       end
+
+      desc "Stop queue processor with QUEUE=your_queue"
+      task :stop => :environment do
+        if ENV['QUEUE']
+          pid = `ps aux | grep 'simplified:starling:start_processor QUEUE=#{ENV['QUEUE']}' | grep -v grep | ruby -e 'puts STDIN.read.split[1]'`
+          unless pid == "nil\n"
+            system "kill #{pid}"
+            Simplified::Starling.feedback("Queue processor stopped for `#{ENV['QUEUE']}`.")
+          else
+            Simplified::Starling.feedback("Queue `#{ENV['QUEUE']}` is not running.")
+          end
+        else
+          Simplified::Starling.feedback("Please, provide a queue name with QUEUE=name")
+        end
+      end
+
     end
 
   end
