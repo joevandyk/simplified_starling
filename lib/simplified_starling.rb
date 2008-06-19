@@ -27,9 +27,9 @@ module Simplified
       end
     end
 
-    def self.status
+    def self.stats
       stats = STARLING.stats
-      self.feedback("Status")
+      self.feedback("Stats")
       pp stats
     rescue Exception => error
       self.feedback(error)
