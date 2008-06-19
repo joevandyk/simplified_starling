@@ -22,20 +22,9 @@ push into the queue the task +test_rendering+ which belongs to a model.
     #
     newsletter = Newsletter.find(params[:id])
     newsletter.push('test_rendering')
-    => STARLING.set('newsletters', { :type => 'Newsletter', 
-                                     :id => 1, 
-                                     :task => 'test_rendering' })
-
-You can overwrite the queue by adding the queue name
-
-    ##
-    # From a model/controller
-    #
-    newsletter = Newsletter.find(params[:id])
-    newsletter.push('test_rendering', 'my_queue')
-    => STARLING.set('my_queue', { :type => 'Newsletter', 
-                                  :id => 1, 
-                                  :task => 'test_rendering' })
+    => STARLING.set('app', { :type => 'Newsletter', 
+                             :id => 1, 
+                             :task => 'test_rendering' })
 
 You can even push a class task into the queue. This will push into the queue 
 the task +recalculate+ which belongs to a model.
@@ -44,20 +33,8 @@ the task +recalculate+ which belongs to a model.
     # From a model/controller
     #
     Stock.push('recalculate')
-    => STARLING.set('stocks', { :type => 'Stock', 
-                                :task => 'recalculate' })
-
-To list the current queues.
-
-    $ rake simplified:starling:queues
-    == [SIMPLIFIED STARLING] =====================================
-    => stocks[2], newsletters[1]
-
-Once your application is running you'll be pushing tasks to a queue. With a 
-background process you can start poping those tasks from the queue.
-
-    $ rake simplified:starling:queues:start QUEUE=newsletters
-    $ rake simplified:starling:queues:stop QUEUE=newsletters
+    => STARLING.set('app', { :type => 'Stock', 
+                             :task => 'recalculate' })
 
 To view server stats ...
 
