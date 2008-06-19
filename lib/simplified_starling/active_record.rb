@@ -5,9 +5,9 @@ module SimplifiedStarling
     ##
     # Push record task into the queue
     #
-    def push(task, queue = self.class.name.tableize)
+    def push(task)
       job = { :type => self.class.to_s, :id => self.id, :task => task }
-      STARLING.set(queue, job)
+      STARLING.set(STARLING_CONFIG['starling']['queue'], job)
     end
 
   end
@@ -19,9 +19,9 @@ class Class
   ##
   # Push a class method task into the queue
   #
-  def push(task, queue = self.name.tableize)
+  def push(task)
     job = { :type => self.to_s, :task => task }
-    STARLING.set(queue, job)
+    STARLING.set(STARLING_CONFIG['starling']['queue'], job)
   end
 
 end
