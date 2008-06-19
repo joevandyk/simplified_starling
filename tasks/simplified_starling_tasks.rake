@@ -39,11 +39,11 @@ namespace :simplified do
       begin
         items = STARLING.sizeof(:all)
         if items.empty?
-          Simplified::Starling.feedback("Queue is empty.")
+          Simplified::Starling.feedback("No queues available.")
         else
           message = []
-          items.each { |key, value| message << "#{key}: #{value}" }
-          Simplified::Starling.feedback(message.join(" / "))
+          items.each { |key, value| message << "#{key}[#{value}]" }
+          Simplified::Starling.feedback(message.join(", "))
         end
       rescue Exception => error
         Simplified::Starling.feedback(error)
