@@ -6,19 +6,21 @@ Works with Starling 0.9.6 or edge. You can follow these steps to build it.
     git clone git://github.com/anotherbritt/starling.git
     cd starling && rake gem && cd pkg && sudo gem install starling-0.9.6.gem
 
-With starling installed in your machine you can start the daemon by running.
+With +starling+ installed in your machine you can start/stop/restart the daemon 
+by running.
 
-    rake simplified:starling:start
-    rake simplified:starling:stop
+    $ rake simplified:starling:start
+    $ rake simplified:starling:stop
+    $ rake simplified:starling:restart
 
 You can put anything into Starling, but after using Starling on a couple of 
-projects I've seen I use always the same hash for storing the jobs.
+projects I've seen I use always the same hash for storing the jobs. This will 
+push into the queue the task +test_rendering+ which belongs to a model.
 
+    ##
+    # From a model/controller
+    #
     newsletter = Newsletter.find(params[:id])
-    newsletter.push('test_rendering')
-
-This will push into the queue the task +test_rendering+ which belongs to a model.
-
     newsletter.push('test_rendering')
     => STARLING.set('newsletters', { :type => 'Newsletter', 
                                      :id => 1, 
@@ -26,17 +28,21 @@ This will push into the queue the task +test_rendering+ which belongs to a model
 
 You can overwrite the queue by adding the queue name
 
+    ##
+    # From a model/controller
+    #
+    newsletter = Newsletter.find(params[:id])
     newsletter.push('test_rendering', 'my_queue')
     => STARLING.set('my_queue', { :type => 'Newsletter', 
                                   :id => 1, 
                                   :task => 'test_rendering' })
 
-You can even push a class task into the queue.
+You can even push a class task into the queue. This will push into the queue 
+the task +recalculate+ which belongs to a model.
 
-    Stock.push('recalculate')
-
-This will push into the queue the task +recalculate+ which belongs to a model.
-
+    ##
+    # From a model/controller
+    #
     Stock.push('recalculate')
     => STARLING.set('stocks', { :type => 'Stock', 
                                 :task => 'recalculate' })
@@ -44,12 +50,14 @@ This will push into the queue the task +recalculate+ which belongs to a model.
 Once your application is running you'll be pushing tasks to a queue. With a 
 background process you can start poping those tasks from the queue.
 
-    rake simplified:starling:start_processor QUEUE=newsletters
-    rake simplified:starling:stop_processor QUEUE=newsletters
+    $ rake simplified:starling:start_processor QUEUE=newsletters
+    $ rake simplified:starling:stop_processor QUEUE=newsletters
 
 To list the current queues.
 
-    rake simplified:starling:queues
+    $ rake simplified:starling:queues
+    == [SIMPLIFIED STARLING] =====================================
+    => comments[132], newsletters[1]
 
 == Example
 
