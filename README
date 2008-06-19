@@ -64,7 +64,7 @@ the task +recalculate+ which belongs to a model.
     => STARLING.set('app', { :type => 'Stock', 
                              :task => 'recalculate' })
 
-To view server stats ...
+To view queue stats ...
 
     $ rake simplified:starling:stats
 
