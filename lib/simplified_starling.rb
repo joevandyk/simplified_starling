@@ -24,9 +24,7 @@ module Simplified
     end
 
     def self.stats
-      stats = STARLING.stats
-      self.feedback("Stats")
-      pp stats
+      STARLING.stats
     rescue Exception => error
       self.feedback(error)
     end
