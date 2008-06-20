@@ -6,6 +6,16 @@ Works with Starling 0.9.6 or edge. You can follow these steps to build it.
     git clone git://github.com/anotherbritt/starling.git
     cd starling && rake gem && cd pkg && sudo gem install starling-0.9.6.gem
 
+From Blaine Cook repository ...
+
+    git clone git://github.com/blaine/starling.git
+    cd starling
+    gem build starling.spec
+    gem install -l starling-0.9.7.5.gem
+
+Note: I don't know which is the master copy of +starling+ and I'm waiting an 
+email reply from the developers. 
+
 === Installing
 
 Install this Rails plugin as usual.
@@ -68,15 +78,23 @@ To view queue stats ...
 
     $ rake simplified:starling:stats
 
-=== Example
+=== Example 1
+
+Push a +newsletter+ job into +starling+.
 
     ##
     # app/controllers/typus/newsletters_controller.rb
     #
     class Typus::NewslettersController < TypusController
 
-      def test
+      def test_deliver
         Newsletter.find(params[:id]).push('test_rendering')
+      end
+
+      def deliver
+        Newsletter.find(params[:id]).push('deliver')
+        flash[:notice] = "Newsletter added to queue."
+        redirect_to :back
       end
 
     end
@@ -86,10 +104,56 @@ To view queue stats ...
     #
     class Newsletter < ActiveRecord::Base
 
-      ##
-      # Your long-running task.
-      #
       def test_rendering
+        ##
+        # Your long-running task to deliver newsletter to test rendering
+        # in diferent email readers.
+      end
+
+      def deliver
+        ##
+        # Long running task to deliver newsletter ...
+        #
+      end
+
+    end
+
+=== Example 2
+
+Confirm an +order+ payment and push into +starling+ an stock recalculation job.
+
+    ##
+    # app/controllers/payments_controller.rb
+    class PaymentsController < ApplicationController
+
+      def confirm
+        @order = Order.find_by_token(params[:token])
+        @order.confirm_payment
+        flash[:notice] = "Thanks for your purchase!"
+        redirect_to :action => 'thanks'
+      end
+
+    end
+
+    ##
+    # app/models/order.rb
+    class Order < ActiveRecord::Base
+
+      def confirm_payment
+        OrderMailer.deliver_payment_confirmation(order)
+        Stock.push('recalculate')
+      end
+
+    end
+
+    ##
+    # app/models/stock.rb
+    class Stock < ActiveRecord::Base
+
+      def self.recalculate
+        ##
+        # A long running operation ...
+        #
       end
 
     end
