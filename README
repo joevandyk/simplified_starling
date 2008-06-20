@@ -89,6 +89,8 @@ Push a +newsletter+ job into +starling+.
 
       def test_deliver
         Newsletter.find(params[:id]).push('test_rendering')
+        flash[:notice] = "Newsletter added to queue."
+        redirect_to :back
       end
 
       def deliver
