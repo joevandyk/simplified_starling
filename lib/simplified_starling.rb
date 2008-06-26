@@ -8,6 +8,7 @@ module Simplified
     end
 
     def self.start_processing(queue)
+      logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
       daemonize()
       loop do
         job = STARLING.get(queue)
@@ -17,8 +18,9 @@ module Simplified
           else
             job[:type].constantize.send(job[:task])
           end
+          logger.info "[Popped job] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]}"
         rescue Exception => error
-          self.feedback(error)
+          logger.info error
         end
       end
     end

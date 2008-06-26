@@ -78,6 +78,11 @@ To view queue stats ...
 
     $ rake simplified:starling:stats
 
+Processed jobs are logged.
+
+    $ tail -f log/development_starling.log
+    $ tail -f log/production_starling.log
+
 === Example 1
 
 Push a +newsletter+ job into +starling+.
