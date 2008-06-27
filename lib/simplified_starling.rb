@@ -18,7 +18,7 @@ module Simplified
           else
             job[:type].constantize.send(job[:task])
           end
-          logger.info "[Popped job] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]}"
+          logger.info "[Popped job @ #{Time.now.to_s(:db)}] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]}"
         rescue Exception => error
           logger.info error
         end
