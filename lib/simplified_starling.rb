@@ -19,8 +19,16 @@ module Simplified
             job[:type].constantize.send(job[:task])
           end
           logger.info "[Popped job @ #{Time.now.to_s(:db)}] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]}"
+        rescue ActiveRecord::RecordNotFound
+          logger.warn "[WARNING] #{job[:type]}##{job[:id]} gone from database."
+        rescue ActiveRecord::StatementInvalid
+          logger.warn "[WARNING] Database connection gone, reconnecting & retrying."
+          logger.info "          #{job.inspect}"
+          STARLING.set(STARLING_CONFIG['starling']['queue'], job)
+          logger.info "[Pushed job @ #{Time.now.to_s(:db)}] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]} (R)"
+          ActiveRecord::Base.connection.reconnect! and retry
         rescue Exception => error
-          logger.info error
+          logger.error error
         end
       end
     end
