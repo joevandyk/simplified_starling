@@ -1,22 +1,24 @@
-== Simplified Starling
+= Simplified Starling
 
-Works with Starling 0.9.6 or edge. You can follow these steps to build it.
+This plugin was coded to define an easy way to push jobs into Starling, log 
+queues and daemonize the unqueue process.
 
-    sudo gem install newgem eventmachine rails_analyzer_tools memcache-client
-    git clone git://github.com/anotherbritt/starling.git
-    cd starling && rake gem && cd pkg && sudo gem install starling-0.9.6.gem
+== Installing Starling
 
-From Blaine Cook repository ...
+Required gems.
 
-    git clone git://github.com/blaine/starling.git
-    cd starling
-    gem build starling.spec
-    gem install -l starling-0.9.7.5.gem
+    $ sudo gem install memcache-client
+    $ sudo gem install SyslogLogger
+    $ sudo gem install eventmachine
 
-Note: I don't know which is the master copy of +starling+ and I'm waiting an 
-email reply from the developers. 
+You can follow these steps to build it.
 
-=== Installing
+    $ git clone git://github.com/starling/starling.git
+    $ cd starling
+    $ gem build starling.gemspec
+    $ sudo gem install -l starling*.gem
+
+== Installing this plugin
 
 Install this Rails plugin as usual.
 
