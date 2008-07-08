@@ -1,29 +1,36 @@
 module SimplifiedStarling
 
-  class ActiveRecord::Base
+  ##
+  # Push record task into the queue
+  #
+  def push(task)
 
-    ##
-    # Push record task into the queue
-    #
-    def push(task)
-      job = { :type => self.class.to_s, :id => self.id, :task => task }
-      STARLING.set(STARLING_CONFIG['starling']['queue'], job)
-    end
+    ActiveRecord::Base.verify_active_connections! if defined? (ActiveRecord)
+
+    job = {}
+    job[:type] = (self.kind_of? Class) ? self.to_s : self.class.to_s
+    job[:id] = (self.kind_of? Class) ? nil : self.id
+    job[:task] = task
+
+    STARLING.set(STARLING_CONFIG['starling']['queue'], job)
+
+    logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
+    logger.info "[Pushed job @ #{Time.now.to_s(:db)}] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]}"
 
   end
 
 end
 
-class Class
+module SimplifiedStarling
 
-  ##
-  # Push a class method task into the queue
-  #
-  def push(task)
-    job = { :type => self.to_s, :task => task }
-    STARLING.set(STARLING_CONFIG['starling']['queue'], job)
+  class ActiveRecord::Base
+    include SimplifiedStarling
   end
 
+end
+
+class Class
+  include SimplifiedStarling
 end
 
 ActiveRecord::Base.send(:include, SimplifiedStarling)

@@ -80,6 +80,34 @@ To view queue stats ...
 
     $ rake simplified:starling:stats
 
+Processed jobs are logged.
+
+    $ tail -f log/development_starling.log
+    $ tail -f log/production_starling.log
+
+=== Log
+
+Each time a job is pushed and popped to the queue is logged.
+
+    [Pushed job @ 2008-06-30 11:06:03] Dispatch order
+    [Popped job @ 2008-06-30 11:06:03] Dispatch order
+
+If database connection goes down or dies after a few hours of inactivity 
+you'll see a WARNING message, if everything went as expected, database 
+connection will be restored and job will be sent again to the queue.
+
+    [Pushed job @ 2008-06-30 11:06:42] Rebuild page 3
+    [WARNING] Database connection gone, reconnecting & retrying.
+              {:type=>"Order", :task=>"dispatch", :id=>nil}
+    [Pushed job @ 2008-06-30 11:06:44] Rebuild page 3 (R)
+    [Popped job @ 2008-06-30 11:06:44] Rebuild page 3
+
+If the record you're trying to process is removed from the database before 
+the queue is processed you'll see a warning on the logs.
+
+    [Pushed job @ 2008-06-30 11:06:50] Rebuild page 3
+    [WARNING] Page#3 gone from database.
+
 === Example 1
 
 Push a +newsletter+ job into +starling+.
