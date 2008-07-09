@@ -7,9 +7,9 @@ module Simplified
       start_processing(queue)
     end
 
-    def self.start_processing(queue)
+    def self.start_processing(queue, daemon = true)
       logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
-      daemonize()
+      daemonize() if daemon
       loop do
         job = STARLING.get(queue)
         begin
