@@ -11,7 +11,9 @@ require 'simplified_starling/daemonize'
 RAILS_ROOT = "/tmp"
 RAILS_ENV = 'test'
 
-STARLING_CONFIG = YAML.load_file(File.dirname(__FILE__) + '/starling.yml')
+@starling_config_file = File.dirname(__FILE__) + '/starling.yml'
+
+STARLING_CONFIG = YAML.load_file(@starling_config_file)
 host, port = STARLING_CONFIG['starling']['host'], STARLING_CONFIG['starling']['port']
 
 STARLING = Starling.new("#{host}:#{port}")
