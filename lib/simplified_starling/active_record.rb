@@ -5,7 +5,7 @@ module SimplifiedStarling
   #
   def push(task)
 
-    ActiveRecord::Base.verify_active_connections! if defined? (ActiveRecord)
+    ActiveRecord::Base.verify_active_connections! if defined?(ActiveRecord)
 
     job = {}
     job[:type] = (self.kind_of? Class) ? self.to_s : self.class.to_s
