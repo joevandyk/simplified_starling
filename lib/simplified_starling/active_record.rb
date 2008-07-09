@@ -15,7 +15,8 @@ module SimplifiedStarling
     STARLING.set(STARLING_CONFIG['starling']['queue'], job)
 
     logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
-    logger.info "[Pushed job @ #{Time.now.to_s(:db)}] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]}"
+
+    logger.info "[#{Time.now.to_s(:db)}] Pushed #{job[:task]} on #{job[:type]} #{job[:id]}"
 
   end
 
