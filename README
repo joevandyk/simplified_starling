@@ -53,6 +53,8 @@ by running.
     $ rake simplified:starling:stop
     $ rake simplified:starling:restart
 
+Starting the daemon will also start processing the queue.
+
 You can put anything into Starling, but after using Starling on a couple of 
 projects I've seen I use always the same hash for storing the jobs. This will 
 push into the queue the task +test_rendering+ which belongs to a model.
