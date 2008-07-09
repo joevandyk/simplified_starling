@@ -39,7 +39,8 @@ namespace :simplified do
 
     desc "Server stats"
     task :stats => :environment do
-      Simplified::Starling.stats
+      queue, items = Simplified::Starling.stats
+      Simplified::Starling.feedback("Queue `#{queue}` has #{items} tasks.")
     end
 
   end
