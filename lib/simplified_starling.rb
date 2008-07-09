@@ -37,11 +37,9 @@ module Simplified
       end
     end
 
-    def self.stats
-      config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
-      STARLING.stats
-      items = STARLING.sizeof(config['starling']['queue'])
-      self.feedback("Queue `#{config['starling']['queue']}` has #{items} tasks.")
+    def self.stats(config_file = "#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
+      config = YAML.load_file(config_file)
+      return config['starling']['queue'], STARLING.sizeof(config['starling']['queue'])
     rescue Exception => error
       self.feedback(error)
     end
