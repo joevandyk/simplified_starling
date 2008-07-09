@@ -10,9 +10,9 @@ namespace :simplified do
       starling_binary = `which starling`.strip
       options = "--config #{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml"
       command = "#{starling_binary} #{options}"
-      raise RuntimeError, "Cannot find starling." if starling_binary.blank?
+      raise RuntimeError, "Cannot find starling" if starling_binary.blank?
       system command
-      Simplified::Starling.feedback("Server successfully started.")
+      Simplified::Starling.feedback("Server successfully started")
       config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
       Simplified::Starling.prepare(config['starling']['queue'])
       Simplified::Starling.feedback("Queue #{config['starling']['queue']} successfully started.")
@@ -24,9 +24,9 @@ namespace :simplified do
       pid_file = config['starling']['pid_file']
       if File.exist?(pid_file)
         system "kill -9 `cat #{config['starling']['pid_file']}`"
-        Simplified::Starling.feedback("Server successfully stopped.")
+        Simplified::Starling.feedback("Server successfully stopped")
       else
-        Simplified::Starling.feedback("Server is not running.")
+        Simplified::Starling.feedback("Server is not running")
       end
       system "rm #{pid_file}"
     end
