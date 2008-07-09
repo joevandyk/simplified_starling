@@ -18,14 +18,14 @@ module Simplified
           else
             job[:type].constantize.send(job[:task])
           end
-          logger.info "[Popped job @ #{Time.now.to_s(:db)}] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]}"
+          logger.info "[#{Time.now.to_s(:db)}] Popped #{job[:task]} on #{job[:type]} #{job[:id]}"
         rescue ActiveRecord::RecordNotFound
           logger.warn "[WARNING] #{job[:type]}##{job[:id]} gone from database."
         rescue ActiveRecord::StatementInvalid
           logger.warn "[WARNING] Database connection gone, reconnecting & retrying."
           logger.info "          #{job.inspect}"
           STARLING.set(STARLING_CONFIG['starling']['queue'], job)
-          logger.info "[Pushed job @ #{Time.now.to_s(:db)}] #{job[:task].titleize.capitalize} #{job[:type].downcase} #{job[:id]} (R)"
+          logger.info "[#{Time.now.to_s(:db)}] Pushed #{job[:task]} on #{job[:type]} #{job[:id]}"
           ActiveRecord::Base.connection.reconnect! and retry
         rescue Exception => error
           logger.error error
@@ -35,6 +35,7 @@ module Simplified
 
     def self.stats
       config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
+      STARLING.stats
       items = STARLING.sizeof(config['starling']['queue'])
       self.feedback("Queue `#{config['starling']['queue']}` has #{items} tasks.")
     rescue Exception => error
