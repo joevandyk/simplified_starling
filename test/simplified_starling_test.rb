@@ -49,6 +49,10 @@ class Post < ActiveRecord::Base
     update_all :status => false
   end
 
+  def self.generate
+    create :title => "This is me at #{Time.now.to_s(:db)}", :status => false
+  end
+
 end
 
 class SimplifiedStarlingTest < Test::Unit::TestCase
@@ -90,6 +94,15 @@ class SimplifiedStarlingTest < Test::Unit::TestCase
     Simplified::Starling.process('your_application_name')
     post = Post.find(:first)
     assert post.status
+  end
+
+  def test_should_insert_1000_items_and_count
+    Post.destroy_all
+    assert_equal Post.count, 0
+    1000.times { |i| Post.push('generate') }
+    Simplified::Starling.process('your_application_name')
+    sleep 30
+    assert_equal Post.count, 1000
   end
 
 end
