@@ -25,15 +25,13 @@ module Simplified
         end
         logger.info "[#{Time.now.to_s(:db)}] Popped #{job[:task]} on #{job[:type]} #{job[:id]}"
       rescue ActiveRecord::RecordNotFound
-        logger.warn "[WARNING] #{job[:type]}##{job[:id]} gone from database."
+        logger.warn "[#{Time.now.to_s(:db)}] WARNING #{job[:type]}##{job[:id]} gone from database."
       rescue ActiveRecord::StatementInvalid
-        logger.warn "[WARNING] Database connection gone, reconnecting & retrying."
-        logger.info "          #{job.inspect}"
-        STARLING.set(STARLING_CONFIG['starling']['queue'], job)
-        logger.info "[#{Time.now.to_s(:db)}] Pushed #{job[:task]} on #{job[:type]} #{job[:id]}"
+        logger.warn "[#{Time.now.to_s(:db)}] WARNING Database connection gone, reconnecting & retrying."
+        logger.info "                        #{job.inspect}"
         ActiveRecord::Base.connection.reconnect! and retry
       rescue Exception => error
-        logger.error error
+        logger.error "[#{Time.now.to_s(:db)}] ERROR #{error.message}"
       end
     end
 
