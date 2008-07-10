@@ -13,9 +13,13 @@ namespace :simplified do
       raise RuntimeError, "Cannot find starling" if starling_binary.blank?
       system command
       Simplified::Starling.feedback("Server successfully started")
-      config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
-      Simplified::Starling.prepare(config['starling']['queue'])
-      Simplified::Starling.feedback("Queue #{config['starling']['queue']} successfully started.")
+      sleep 5
+      begin
+        STARLING.stats
+        config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
+        Simplified::Starling.start_processing(config['starling']['queue'])
+        Simplified::Starling.feedback("Queue #{config['starling']['queue']} successfully started.")
+      end
     end
 
     desc "Stop starling server"
