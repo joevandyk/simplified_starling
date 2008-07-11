@@ -51,8 +51,8 @@ namespace :simplified do
 
     end
 
-    desc "Start processing queue and daemonize"
-    task :start_processing_queue => :environment do
+    desc "Start processing jobs (process is daemonized)"
+    task :start_processing_jobs => :environment do
       begin
         pid_file = "#{RAILS_ROOT}/tmp/pids/starling_#{RAILS_ENV}.pid"
         unless File.exist?(pid_file)
@@ -68,8 +68,8 @@ namespace :simplified do
       end
     end
 
-    desc "Stop processing queue"
-    task :stop_processing_queue => :environment do
+    desc "Stop processing jobs"
+    task :stop_processing_jobs => :environment do
       pid_file = "#{RAILS_ROOT}/tmp/pids/starling_#{RAILS_ENV}.pid"
       if File.exist?(pid_file)
         system "kill -9 `cat #{pid_file}`"
@@ -80,8 +80,8 @@ namespace :simplified do
       end
     end
 
-    desc "Start starling and process queue"
-    task :start_and_process => :environment do
+    desc "Start starling and process jobs"
+    task :start_and_process_jobs => :environment do
       Rake::Task['simplified:starling:start'].invoke
       sleep 10
       Rake::Task['simplified:starling:start_processing_queue'].invoke
