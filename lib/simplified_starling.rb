@@ -7,15 +7,33 @@ module Simplified
       start_processing(queue)
     end
 
-    def self.start_processing(queue, daemon = true)
-      daemonize() if daemon
-      loop do
-        process(queue)
+    def self.process(queue, daemonize = true)
+
+      pid = fork do
+        Signal.trap('HUP', 'IGNORE') # Don't die upon logout
+        loop { pop(queue) }
       end
+
+      if daemonize
+
+        ##
+        # Write pid file in pid folder
+        #
+        File.open("#{RAILS_ROOT}/tmp/pids/starling_#{RAILS_ENV}.pid", "w") do |pid_file|
+          pid_file.puts pid
+        end
+
+        ##
+        # Detach process
+        #
+        Process.detach(pid)
+
+      end
+
     end
 
-    def self.process(queue)
-      logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
+    def self.pop(queue)
+      logger = Logger.new("#{RAILS_ROOT}/log/starling_#{RAILS_ENV}.log")
       job = STARLING.get(queue)
       begin
         if job[:id]
@@ -38,8 +56,6 @@ module Simplified
     def self.stats(config_file = "#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
       config = YAML.load_file(config_file)
       return config['starling']['queue'], STARLING.sizeof(config['starling']['queue'])
-    rescue Exception => error
-      self.feedback(error)
     end
 
     def self.feedback(message)
