@@ -47,6 +47,30 @@ module Simplified
       puts "=> #{message}"
     end
 
+    def self.setup
+
+      starling_folder = Dir.getwd + "/config/starling"
+      starling_plugin_folder = Dir.getwd + "/vendor/plugins/simplified_starling"
+
+      FileUtils.mkdir starling_folder unless File.exist?(starling_folder)
+
+      %w( development test production ).each do |env|
+        starling_config = Dir.getwd + "/config/starling/#{env}.yml"
+        unless File.exist?(starling_config)
+          FileUtils.cp starling_plugin_folder + "/files/config.yml.tpl", starling_config 
+          puts "=> Copied configuration file to #{env}"
+        end
+      end
+
+      starling_initializer = Dir.getwd + "/config/initializers/starling.rb"
+
+      unless File.exist?(starling_initializer)
+        FileUtils.cp starling_plugin_folder + "/files/initializer.rb", starling_initializer
+        puts "=> Copied starling initializer"
+      end
+
+    end
+
   end
 
 end
