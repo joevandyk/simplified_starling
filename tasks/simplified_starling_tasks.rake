@@ -47,6 +47,11 @@ namespace :simplified do
       Simplified::Starling.feedback("Queue `#{queue}` has #{items} tasks.")
     end
 
+    desc "Copy config files to config/starling/*"
+    task :setup do
+      Simplified::Starling.setup
+    end
+
   end
 
 end
