@@ -53,14 +53,24 @@ application run the following command to create them.
 
 === How it works?
 
-With +starling+ installed in your machine you can start/stop/restart the daemon 
+With +starling+ installed in your machine you can start/stop/restart Starling 
 by running.
 
     $ rake simplified:starling:start
     $ rake simplified:starling:stop
     $ rake simplified:starling:restart
 
-Starting the daemon will also start processing the queue.
+Once Starling is being started you can start processing jobs.
+
+    $ rake simplified:starling:start_processing_jobs
+
+You can start Starling and start processing jobs by ...
+
+    $ rake simplified:starling:start_and_process_jobs
+
+If you want to stop processing jobs ...
+
+    $ rake simplified:starling:stop_processing_jobs
 
 You can put anything into Starling, but after using Starling on a couple of 
 projects I've seen I use always the same hash for storing the jobs. This will 
