@@ -6,8 +6,6 @@ require 'simplified_starling'
 require 'simplified_starling/active_record'
 require 'simplified_starling/daemonize'
 
-# require  + "/fixtures/schema"
-
 RAILS_ROOT = "/tmp"
 RAILS_ENV = 'test'
 
