@@ -112,20 +112,18 @@ Each time a job is pushed and popped to the queue is logged.
     [2008-06-30 11:06:03] Popped dispatch order
 
 If database connection goes down or dies after a few hours of inactivity 
-you'll see a WARNING message, if everything went as expected, database 
-connection will be restored and job will be sent again to the queue.
+database connection will be restored and job will be processed.
 
     [2008-06-30 11:06:42] Pushed rebuild Page 3
-    [WARNING] Database connection gone, reconnecting & retrying.
-              {:type=>"Order", :task=>"dispatch", :id=>nil}
-    [2008-06-30 11:06:44] Pushed rebuild Page 3 (R)
+    [2008-06-30 11:06:42] WARNING Database connection gone, reconnecting & retrying.
+                          {:type=>"Order", :task=>"dispatch", :id=>nil}
     [2008-06-30 11:06:44] Popped rebuild Page 3
 
 If the record you're trying to process is removed from the database before 
 the queue is processed you'll see a warning on the logs.
 
     [2008-06-30 11:06:50] Pushed rebuild Page 3
-    [WARNING] Page#3 gone from database.
+    [2008-06-30 11:06:50] WARNING Page#3 gone from database.
 
 === Example 1
 
