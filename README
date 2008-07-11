@@ -42,7 +42,14 @@ environment under +config/starling+.
       queue: app_development
 
 You'll also find a initializer called +starling.rb+ under +config/initializers+ 
-that will connect your application to the +starling+ server.
+that will connect your application to the +starling+ server once the application 
+boots.
+
+Note: If you don't use the `script/plugin install` to install the plugin 
+configuration files will not be created. From the root folder of your Rails 
+application run the following command to create them.
+
+    $ rake simplified:starling:setup
 
 === How it works?
 
