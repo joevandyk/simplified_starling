@@ -1,3 +1,9 @@
+##
+# Load starling setting and connect application to starling.
+#
+STARLING_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")['starling']
+STARLING = Starling.new("#{STARLING_CONFIG['host']}:#{STARLING_CONFIG['port']}")
+
 module Simplified
 
   class Starling
@@ -33,7 +39,7 @@ module Simplified
     end
 
     def self.pop(queue)
-      logger = Logger.new("#{RAILS_ROOT}/log/starling_#{RAILS_ENV}.log")
+      logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
       job = STARLING.get(queue)
       begin
         if job[:id]
@@ -53,8 +59,9 @@ module Simplified
       end
     end
 
-    def self.stats(config_file = "#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
-      config = YAML.load_file(config_file)
+    def self.stats(config_file = "config/starling/#{RAILS_ENV}.yml")
+      starling_folder = Dir.getwd + "/#{config_file}"
+      config = YAML.load_file(starling_folder)
       return config['starling']['queue'], STARLING.sizeof(config['starling']['queue'])
     end
 
@@ -76,13 +83,6 @@ module Simplified
           FileUtils.cp starling_plugin_folder + "/files/config.yml.tpl", starling_config 
           puts "=> Copied configuration file to #{env}"
         end
-      end
-
-      starling_initializer = Dir.getwd + "/config/initializers/starling.rb"
-
-      unless File.exist?(starling_initializer)
-        FileUtils.cp starling_plugin_folder + "/files/initializer.rb", starling_initializer
-        puts "=> Copied starling initializer"
       end
 
     end
