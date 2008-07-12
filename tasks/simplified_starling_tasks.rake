@@ -6,7 +6,7 @@ namespace :simplified do
   namespace :starling do
 
     desc "Start starling server"
-    task :start => :environment do
+    task :start do
 
       config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
       pid_file = config['starling']['pid_file']
@@ -25,7 +25,7 @@ namespace :simplified do
     end
 
     desc "Stop starling server"
-    task :stop => :environment do
+    task :stop do
 
       config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
       pid_file = config['starling']['pid_file']
@@ -41,7 +41,7 @@ namespace :simplified do
     end
 
     desc "Restart starling server"
-    task :restart => :environment do
+    task :restart do
 
       config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
       pid_file = config['starling']['pid_file']
@@ -59,9 +59,9 @@ namespace :simplified do
           Simplified::Starling.stats
           config = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")
           Simplified::Starling.process(config['starling']['queue'])
-          Simplified::Starling.feedback("Started processing queue")
+          Simplified::Starling.feedback("Started processing jobs")
         else
-          Simplified::Starling.feedback("Queue is already being processed")
+          Simplified::Starling.feedback("Jobs are already being processed")
         end
       rescue Exception => error
         Simplified::Starling.feedback(error.message)
@@ -69,29 +69,29 @@ namespace :simplified do
     end
 
     desc "Stop processing jobs"
-    task :stop_processing_jobs => :environment do
+    task :stop_processing_jobs do
       pid_file = "#{RAILS_ROOT}/tmp/pids/starling_#{RAILS_ENV}.pid"
       if File.exist?(pid_file)
         system "kill -9 `cat #{pid_file}`"
-        Simplified::Starling.feedback("Stopped processing queue")
+        Simplified::Starling.feedback("Stopped processing jobs")
         File.delete(pid_file)
       else
-        Simplified::Starling.feedback("Queue is not being processed")
+        Simplified::Starling.feedback("Jobs is not being processed")
       end
     end
 
     desc "Start starling and process jobs"
-    task :start_and_process_jobs => :environment do
+    task :start_and_process_jobs do
       Rake::Task['simplified:starling:start'].invoke
       sleep 10
       Rake::Task['simplified:starling:start_processing_queue'].invoke
     end
 
     desc "Server stats"
-    task :stats => :environment do
+    task :stats do
       begin
         queue, items = Simplified::Starling.stats
-        Simplified::Starling.feedback("Queue has #{items} jobs.")
+        Simplified::Starling.feedback("Queue has #{items} jobs")
       rescue Exception => error
         Simplified::Starling.feedback(error.message)
       end
