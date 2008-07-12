@@ -1,8 +1,10 @@
 ##
 # Load starling setting and connect application to starling.
 #
-STARLING_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/starling/#{RAILS_ENV}.yml")['starling']
-STARLING = Starling.new("#{STARLING_CONFIG['host']}:#{STARLING_CONFIG['port']}")
+begin
+  STARLING_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/starling.yml")[RAILS_ENV]
+  STARLING = Starling.new("#{STARLING_CONFIG['host']}:#{STARLING_CONFIG['port']}")
+end
 
 module Simplified
 
@@ -59,10 +61,10 @@ module Simplified
       end
     end
 
-    def self.stats(config_file = "config/starling/#{RAILS_ENV}.yml")
-      starling_folder = Dir.getwd + "/#{config_file}"
-      config = YAML.load_file(starling_folder)
-      return config['starling']['queue'], STARLING.sizeof(config['starling']['queue'])
+    def self.stats
+      config_file = Dir.getwd + "/config/starling.yml"
+      config = YAML.load_file(config_file)[RAILS_ENV]
+      return config['queue'], STARLING.sizeof(config['queue'])
     end
 
     def self.feedback(message)
@@ -71,20 +73,12 @@ module Simplified
     end
 
     def self.setup
-
-      starling_folder = Dir.getwd + "/config/starling"
       starling_plugin_folder = Dir.getwd + "/vendor/plugins/simplified_starling"
-
-      FileUtils.mkdir starling_folder unless File.exist?(starling_folder)
-
-      %w( development test production ).each do |env|
-        starling_config = Dir.getwd + "/config/starling/#{env}.yml"
-        unless File.exist?(starling_config)
-          FileUtils.cp starling_plugin_folder + "/files/config.yml.tpl", starling_config 
-          puts "=> Copied configuration file to #{env}"
-        end
+      starling_config = Dir.getwd + "/config/starling.yml"
+      unless File.exist?(starling_config)
+        FileUtils.cp starling_plugin_folder + "/files/starling.yml.tpl", starling_config
+        puts "=> Copied configuration file"
       end
-
     end
 
   end
