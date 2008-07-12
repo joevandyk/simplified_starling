@@ -4,7 +4,6 @@ require 'active_record'
 require 'starling'
 require 'simplified_starling'
 require 'simplified_starling/active_record'
-require 'simplified_starling/daemonize'
 
 RAILS_ROOT = "/tmp"
 RAILS_ENV = 'test'
