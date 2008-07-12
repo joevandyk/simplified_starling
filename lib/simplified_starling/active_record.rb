@@ -12,7 +12,7 @@ module SimplifiedStarling
     job[:id] = (self.kind_of? Class) ? nil : self.id
     job[:task] = task
 
-    STARLING.set(STARLING_CONFIG['starling']['queue'], job)
+    STARLING.set(STARLING_CONFIG['queue'], job)
 
     logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
     logger.info "[#{Time.now.to_s(:db)}] Pushed #{job[:task]} on #{job[:type]} #{job[:id]}"
