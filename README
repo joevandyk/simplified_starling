@@ -31,13 +31,10 @@ Install this Rails plugin as usual.
 
     script/plugin install git://github.com/fesplugas/simplified_starling.git
 
-After installing the plugin you'll find configuration files for each Rails 
-environment under +config/starling+.
+After installing the plugin you'll find a configuration file on the config 
+folder of your Rails application named +starling.yml+.
 
-    ##
-    # RAILS_ROOT/config/starling/development.yml
-    #
-    starling:
+    development:
       host: 127.0.0.1
       port: 22122
       pid_file: /tmp/starling.pid
@@ -47,10 +44,6 @@ environment under +config/starling+.
       log_level: DEBUG
       daemonize: true
       queue: app_development
-
-You'll also find a initializer called +starling.rb+ under +config/initializers+ 
-that will connect your application to the +starling+ server once the application 
-boots.
 
 Note: If you don't use the `script/plugin install` to install the plugin 
 configuration files will not be created. From the root folder of your Rails 
