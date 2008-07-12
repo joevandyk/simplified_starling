@@ -11,10 +11,8 @@ RAILS_ENV = 'test'
 
 @starling_config_file = File.dirname(__FILE__) + '/starling.yml'
 
-STARLING_CONFIG = YAML.load_file(@starling_config_file)
-host, port = STARLING_CONFIG['starling']['host'], STARLING_CONFIG['starling']['port']
-
-STARLING = Starling.new("#{host}:#{port}")
+STARLING_CONFIG = YAML.load_file(@starling_config_file)['starling']
+STARLING = Starling.new("#{STARLING_CONFIG['host']}:#{STARLING_CONFIG['port']}")
 
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
 
