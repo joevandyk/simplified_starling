@@ -67,8 +67,7 @@ module Simplified
     end
 
     def self.feedback(message)
-      puts "== [SIMPLIFIED STARLING] ====================================="
-      puts "=> #{message}"
+      puts "=> [SIMPLIFIED STARLING] #{message}"
     end
 
     def self.setup
