@@ -2,6 +2,7 @@
 # Load starling setting and connect application to starling.
 #
 begin
+  STARLING_LOG = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
   STARLING_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/starling.yml")[RAILS_ENV]
   STARLING = Starling.new("#{STARLING_CONFIG['host']}:#{STARLING_CONFIG['port']}")
 end
@@ -41,7 +42,6 @@ module Simplified
     end
 
     def self.pop(queue)
-      logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}_starling.log")
       job = STARLING.get(queue)
       begin
         if job[:id]
@@ -49,15 +49,14 @@ module Simplified
         else
           job[:type].constantize.send(job[:task])
         end
-        logger.info "[#{Time.now.to_s(:db)}] Popped #{job[:task]} on #{job[:type]} #{job[:id]}"
+        STARLING_LOG.info "[#{Time.now.to_s(:db)}] Popped #{job[:task]} on #{job[:type]} #{job[:id]}"
       rescue ActiveRecord::RecordNotFound
-        logger.warn "[#{Time.now.to_s(:db)}] WARNING #{job[:type]}##{job[:id]} gone from database."
+        STARLING_LOG.warn "[#{Time.now.to_s(:db)}] WARNING #{job[:type]}##{job[:id]} gone from database."
       rescue ActiveRecord::StatementInvalid
-        logger.warn "[#{Time.now.to_s(:db)}] WARNING Database connection gone, reconnecting & retrying."
-        logger.info "                        #{job.inspect}"
+        STARLING_LOG.warn "[#{Time.now.to_s(:db)}] WARNING Database connection gone, reconnecting & retrying."
         ActiveRecord::Base.connection.reconnect! and retry
       rescue Exception => error
-        logger.error "[#{Time.now.to_s(:db)}] ERROR #{error.message}"
+        STARLING_LOG.error "[#{Time.now.to_s(:db)}] ERROR #{error.message}"
       end
     end
 
