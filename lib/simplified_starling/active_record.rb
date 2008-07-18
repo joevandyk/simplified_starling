@@ -16,6 +16,9 @@ module SimplifiedStarling
 
     STARLING_LOG.info "[#{Time.now.to_s(:db)}] Pushed #{job[:task]} on #{job[:type]} #{job[:id]}"
 
+  rescue Exception => error
+    STARLING_LOG.error "[#{Time.now.to_s(:db)}] ERROR #{error.message}"
+    raise MemCache::MemCacheError, error.message
   end
 
 end
