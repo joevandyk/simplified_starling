@@ -1,3 +1,5 @@
+RAILS_ROOT = "/tmp"
+RAILS_ENV = 'test'
 require 'test/unit'
 require 'rubygems'
 require 'active_record'
@@ -5,8 +7,6 @@ require 'starling'
 require 'simplified_starling'
 require 'simplified_starling/active_record'
 
-RAILS_ROOT = "/tmp"
-RAILS_ENV = 'test'
 
 @starling_config_file = File.dirname(__FILE__) + '/starling.yml'
 
@@ -44,8 +44,12 @@ class Post < ActiveRecord::Base
     update_all :status => false
   end
 
-  def self.generate
-    create :title => "This is me at #{Time.now.to_s(:db)}", :status => false
+  def self.generate options={}
+    create :title => options[:title], :status => false
+  end
+
+  def update_title options={}
+    update_attribute :title, options[:title]
   end
 
 end
@@ -80,6 +84,20 @@ class SimplifiedStarlingTest < Test::Unit::TestCase
     Simplified::Starling.process('your_application_name')
     post = Post.find(:first)
     assert !post.status
+  end
+
+  def test_class_methods_support_options
+    Post.push(:generate, { :title => "Joe" }
+    Simplified::Starling.process('your_application_name')
+    assert Post.find_by_title("Joe")
+  end
+
+  def test_instance_methods_support_options
+    post = Post.find(:first)
+    assert post.reload.title != "Joe"
+    post.push(:update_title, { :title => "Joe" })
+    Simplified::Starling.process('your_application_name')
+    assert post.reload.title == "Joe"
   end
 
   def test_should_push_an_instance_method_on_post
