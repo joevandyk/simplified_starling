@@ -5,10 +5,19 @@ namespace :simplified do
 
   namespace :starling do
 
+    def starling_running?
+      config = YAML.load_file("#{RAILS_ROOT}/config/starling.yml")[RAILS_ENV]
+      if File.exist?(config['pid_file']) 
+        Process.getpgid(File.read(config['pid_file']).to_i) rescue return false
+        else
+          return true
+        end
+    end
+
     desc "Start starling server"
     task :start do
       config = YAML.load_file("#{RAILS_ROOT}/config/starling.yml")[RAILS_ENV]
-      unless File.exist?(config['pid_file'])
+      unless starling_running?
         starling_binary = `which starling`.strip
         raise RuntimeError, "Cannot find starling" if starling_binary.blank?
         options = []
@@ -80,7 +89,7 @@ namespace :simplified do
     task :start_and_process_jobs do
       Rake::Task['simplified:starling:start'].invoke
       sleep 10
-      Rake::Task['simplified:starling:start_processing_queue'].invoke
+      Rake::Task['simplified:starling:start_processing_jobs'].invoke
     end
 
     desc "Server stats"
